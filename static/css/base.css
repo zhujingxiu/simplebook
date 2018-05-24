@@ -1,0 +1,7 @@
+.tab-pane{
+    padding:20px 5px ;
+}
+.upload-block{
+    display: inline-block;
+    min-height: 80px;
+}

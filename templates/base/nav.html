@@ -1,0 +1,31 @@
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{% url 'books' %}">图书管理系统</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li {% if request.path|slice:'1:' == 'book' %} class="active" {% endif %}>
+                    <a href="{% url 'books' %}">图书 </a>
+                </li>
+                <li {% if request.path|slice:'1:' == 'author' %} class="active" {% endif %}>
+                    <a href="{% url 'authors' %}">作者</a>
+                </li>
+                <li {% if request.path|slice:'1:' == 'publisher' %} class="active" {% endif %}>
+                    <a href="{% url 'publishers' %}">出版社</a>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#" class="hidden-lg">登录</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

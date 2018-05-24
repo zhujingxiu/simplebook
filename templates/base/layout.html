@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}  {% endblock %} 图书管理系统</title>
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/libs/layer/skin/layer.css">
+</head>
+<body>
+{% include 'base/nav.html' %}
+<div class="container">
+    <div class="row">
+        {% block content %} {% endblock %}
+    </div>
+</div>
+    <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/libs/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/libs/layer/layer.js"></script>
+    {% block js %} {% endblock %}
+</body>
+</html>

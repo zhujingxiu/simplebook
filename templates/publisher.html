@@ -1,0 +1,115 @@
+{% extends "base/layout.html" %}
+{% block title %} 出版社列表 {% endblock %}
+
+{% block content %}
+        <div class="col-sm-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">出版社列表</h3>
+                </div>
+                <div class="panel-body">
+                    <table id="list" class="table table-striped table-hover">
+                        <thead>
+                        <tr >
+                            <th>#</th>
+                            <th>名称</th>
+                            <th>书籍量</th>
+                            <th>添加时间</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in records %}
+                        <tr data-entry="{{ item.id }}">
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.book_publishers.all.count }}</td>
+                            <td>{{ item.added_at|date:'Y-m-d H:i' }}</td>
+                            <td>
+                                <a class="btn btn-link btn-sm btn-edit"><span class="glyphicon glyphicon-edit"></span> 编辑</a>
+                                <a class="btn btn-link btn-sm btn-del"><span class="glyphicon glyphicon-trash"></span> 删除</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr> <td colspan="5">没有记录</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    <div class="text-right">
+                        <button id="btn-new" type="submit" class="btn btn-success btn-sm">
+                            添加 <span class="glyphicon glyphicon-plus-sign"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript" src="/static/libs/jquery-validation/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/static/libs/jquery-validation/messages_zh.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.form.js"></script>
+    <script type="text/javascript">
+        $('#btn-new').on('click',function () {
+            publisher_form(0)
+        });
+        $('#list .btn-edit').on('click',function () {
+            publisher_form($(this).parent().parent('tr').data('entry'))
+        });
+        $('#list .btn-del').on('click',function () {
+            var entry_id = $(this).parent().parent('tr').data('entry');
+            layer.confirm('确定删除该出版社',{icon: 3, title:'删除确认'},function () {
+                $.ajax({
+                    url:'/publisher/delete/'+entry_id,
+                    dataType:'json',
+                    success:function (json) {
+                        if(json.code==1){
+                            layer.msg(json.msg,{time: 2000},function(){
+                                location.reload();
+                            });
+                        }else{
+                            layer.alert(json.msg, {icon:5})
+                        }
+                    }
+                })
+            });
+        });
+        function publisher_form(publisher_id) {
+            $.ajax({
+                url:'/publisher/form/'+publisher_id,
+                dataType:'json',
+                success:function (json) {
+                    layer.open({
+                        title:json.title,
+                        content:json.content,
+                        offset: '100px',
+                        btn: ['保存', '取消'],
+                        yes: function(index, layero){
+                            $('#form-publisher').submit();
+                        }
+                    })
+                }
+            });
+        }
+        $.validator.setDefaults({
+            errorElement : 'span',
+            errorClass : 'help-block',
+            highlight : function(element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            success : function(label, element) {
+                $(element).closest('.form-group').removeClass('has-error');
+                label.remove();
+            },
+            errorPlacement : function(error, element) {
+                if(error.text().length>0)
+                    layer.tips(error.text(), element,{tips: 1});
+            }
+        });
+
+    </script>
+
+{% endblock %}
